@@ -1,0 +1,51 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+*.manifest
+*.spec
+
+# ---- Django ----
+*.log
+*.pot
+*.pyc
+db.sqlite3
+local_settings.py
+
+# Migrations (opcional - só ignore se não quiser versionar)
+# */migrations/*
+# !*/migrations/__init__.py
+
+# ---- Virtualenv ----
+venv/
+ENV/
+env/
+.venv/
+
+# ---- IDEs & editores ----
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ---- Sistema operacional ----
+.DS_Store
+Thumbs.db
+
+# ---- Arquivos de pacotes ----
+*.bak
+*.tmp
+*.orig
+
+# ---- Configuração de containers ----
+*.pid
+*.seed
+*.cover
+.coverage
+.tox/
+dist/
+build/
