@@ -3,7 +3,290 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="{% static 'img/logo.png' %}" />
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>DashLog</title>
   </head>
-  <body></body>
+  <body>
+    <nav class="bg-white border-gray-200 shadow-sm">
+      <div
+        class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4"
+      >
+        <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
+          <img src="{% static 'img/logo.png' %}" class="h-8" alt="Logo" />
+          <span
+            class="self-center text-2xl font-semibold whitespace-nowrap text-white"
+          >
+            DashLog
+          </span>
+        </a>
+      </div>
+    </nav>
+
+    <main
+      class="p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-[calc(100vh-64px)]"
+    >
+      <!-- Histórico (pode iniciar vazio) -->
+      <section
+        class="lg:col-span-4 bg-white rounded-2xl shadow-lg hover:shadow-xl transition p-4 sm:p-6 border border-gray-200 flex flex-col order-2 lg:order-1"
+      >
+        <h2 class="text-lg font-semibold mb-4 border-l-4 border-[#FF6500] pl-2">
+          Histórico
+        </h2>
+        <div
+          id="historico-container"
+          class="flex-1 overflow-y-auto bg-gray-50 rounded-lg p-4 text-sm text-gray-600 space-y-4 max-h-[calc(100vh-200px)]"
+        >
+          <!-- Cards do histórico vão ser inseridos aqui dinamicamente via JS -->
+        </div>
+      </section>
+
+      <!-- Coluna direita -->
+      <div class="lg:col-span-8 grid grid-cols-1 gap-6 order-1 lg:order-2">
+        <!-- Linha superior: Câmera + Códigos -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Câmera -->
+          <section
+            class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition p-4 sm:p-6 border border-gray-200"
+          >
+            <h2
+              class="text-lg font-semibold mb-4 border-l-4 border-[#FF6500] pl-2"
+            >
+              Câmera
+            </h2>
+            <div
+              class="bg-gray-400 h-48 sm:h-64 rounded-xl flex items-center justify-center text-white font-medium"
+            >
+              <video
+                id="video"
+                autoplay
+                playsinline
+                class="w-full h-full object-cover rounded-xl"
+              ></video>
+            </div>
+          </section>
+
+          <!-- Códigos -->
+          <section
+            class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition p-4 sm:p-6 border border-gray-200"
+          >
+            <h2
+              class="text-lg font-semibold mb-4 border-l-4 border-[#FF6500] pl-2"
+            >
+              Códigos
+            </h2>
+
+            <!-- GIF 1 -->
+            <div class="flex justify-center items-center mb-4" id="gif1">
+              <img
+                class="w-24 sm:w-32 md:w-40 lg:w-48 xl:w-52 h-auto"
+                src="{% static 'img/caixa-cod.gif' %}"
+                alt=""
+              />
+            </div>
+
+            <!-- Código -->
+            <div
+              class="flex justify-center items-center hidden mb-4"
+              id="codigo"
+            >
+              <div class="flex flex-col items-center">
+                <div class="icon">
+                  <img
+                    class="w-24 sm:w-32 md:w-36 lg:w-40 h-auto"
+                    src="{% static 'img/cod-barras.png' %}"
+                    alt=""
+                  />
+                </div>
+                <strong
+                  ><span class="text-black" id="codigo-texto"></span
+                ></strong>
+              </div>
+            </div>
+
+            <!-- GIF 2 -->
+            <div class="flex justify-center items-center hidden " id="gif2"> 
+              <img
+                class="w-24 sm:w-32 md:w-40 lg:w-48 xl:w-52 h-auto"
+                src="{% static 'img/caixa-esteira.gif' %}"
+                alt=""
+              />
+            </div>
+          </section>
+        </div>
+
+        <!-- Linha inferior: Contagem por Região -->
+        <section
+          class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition p-4 sm:p-6 border border-gray-200"
+        >
+          <h2
+            class="text-lg font-semibold mb-4 border-l-4 border-[#FF6500] pl-2"
+          >
+            Contagem por Região
+          </h2>
+
+          <!-- Sempre renderiza as caixas, mesmo com contagem = 0 -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div
+              class="bg-[#7AC789] text-white p-4 sm:p-6 rounded-lg text-center shadow-lg hover:shadow-xl transition transform hover:scale-105 aspect-square flex flex-col items-center justify-center"
+            >
+              <i class="fas fa-tree text-2xl sm:text-3xl mb-2"></i>
+              <span class="text-lg sm:text-xl font-bold">Norte</span>
+              <span class="text-base sm:text-lg" id="norte-count">0</span>
+            </div>
+
+            <div
+              class="bg-[#FF6F61] text-white p-4 sm:p-6 rounded-lg text-center shadow-lg hover:shadow-xl transition transform hover:scale-105 aspect-square flex flex-col items-center justify-center"
+            >
+              <i class="fas fa-sun text-2xl sm:text-3xl mb-2"></i>
+              <span class="text-lg sm:text-xl font-bold">Nordeste</span>
+              <span class="text-base sm:text-lg" id="nordeste-count">0</span>
+            </div>
+
+            <div
+              class="bg-[#6A5ACD] text-white p-4 sm:p-6 rounded-lg text-center shadow-lg hover:shadow-xl transition transform hover:scale-105 aspect-square flex flex-col items-center justify-center"
+            >
+              <i class="fas fa-water text-2xl sm:text-3xl mb-2"></i>
+              <span class="text-lg sm:text-xl font-bold">Sul</span>
+              <span class="text-base sm:text-lg" id="sul-count">0</span>
+            </div>
+
+            <div
+              class="bg-[#FFD700] text-white p-4 sm:p-6 rounded-lg text-center shadow-lg hover:shadow-xl transition transform hover:scale-105 aspect-square flex flex-col items-center justify-center"
+            >
+              <i class="fas fa-city text-2xl sm:text-3xl mb-2"></i>
+              <span class="text-lg sm:text-xl font-bold">Sudeste</span>
+              <span class="text-base sm:text-lg" id="sudeste-count">0</span>
+            </div>
+
+            <div
+              class="bg-[#FF4500] text-white p-4 sm:p-6 rounded-lg text-center shadow-lg hover:shadow-xl transition transform hover:scale-105 aspect-square flex flex-col items-center justify-center"
+            >
+              <i class="fas fa-flag-checkered text-2xl sm:text-3xl mb-2"></i>
+              <span class="text-lg sm:text-xl font-bold">Centro-Oeste</span>
+              <span class="text-base sm:text-lg" id="co-count">0</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script>
+      async function getPacote() {
+        try {
+          const resp = await fetch("/api/get-pacote/");
+          const data = await resp.json();
+          console.log("Pacote recebido:", data); // Debug
+          return data.codigo ? data : null;
+        } catch (e) {
+          console.error("Erro fetch:", e);
+          return null;
+        }
+      }
+
+      const regioesConfig = {
+        norte: { cor: "#7AC789", icone: "fas fa-tree" },
+        nordeste: { cor: "#FF6F61", icone: "fas fa-sun" },
+        sul: { cor: "#6A5ACD", icone: "fas fa-water" },
+        sudeste: { cor: "#FFD700", icone: "fas fa-city" },
+        "centro-oeste": { cor: "#FF4500", icone: "fas fa-flag-checkered" },
+      };
+
+      // Mapeamento para IDs de contagem
+      const regioesId = {
+        norte: "norte-count",
+        nordeste: "nordeste-count",
+        sul: "sul-count",
+        sudeste: "sudeste-count",
+        "centro-oeste": "co-count",
+      };
+
+      function atualizarHistorico(nome, codigo, regiao) {
+        const historico = document.getElementById("historico-container");
+        const novoItem = document.createElement("div");
+        novoItem.className = "card flex items-center gap-3 p-2";
+
+        const config = regioesConfig[regiao.toLowerCase()] || {
+          cor: "#999999",
+          icone: "fas fa-box",
+        };
+
+        novoItem.innerHTML = `
+      <div class="text-white w-16 h-16 rounded-lg flex items-center justify-center"
+           style="background-color: ${config.cor}">
+        <i class="${config.icone} text-2xl"></i>
+      </div>
+      <div class="text-container">
+        <p class="text-lg font-semibold">${nome}</p>
+        <p class="sub-text">${codigo}</p>
+      </div>
+    `;
+
+        historico.prepend(novoItem);
+      }
+
+      function incrementarContagem(regiao) {
+        const id = regioesId[regiao.toLowerCase()];
+        if (!id) return;
+        const span = document.getElementById(id);
+        if (span) {
+          span.textContent = parseInt(span.textContent) + 1;
+        }
+      }
+
+      async function ciclo() {
+        const gif1 = document.getElementById("gif1");
+        const codigoDiv = document.getElementById("codigo");
+        const codigoTexto = document.getElementById("codigo-texto");
+        const gif2 = document.getElementById("gif2");
+
+        // Reset visual
+        gif1.classList.remove("hidden");
+        codigoDiv.classList.add("hidden");
+        gif2.classList.add("hidden");
+
+        const pacote = await getPacote();
+        if (!pacote) return;
+
+        // Mostra código
+        gif1.classList.add("hidden");
+        codigoTexto.textContent = pacote.codigo;
+        codigoDiv.classList.remove("hidden");
+
+        atualizarHistorico(pacote.nome, pacote.codigo, pacote.regiao);
+        incrementarContagem(pacote.regiao);
+
+        // Depois de 2s mostra gif2
+        setTimeout(() => {
+          codigoDiv.classList.add("hidden");
+          gif2.classList.remove("hidden");
+
+          // Volta para gif1 após mais 2s
+          setTimeout(() => {
+            gif2.classList.add("hidden");
+            gif1.classList.remove("hidden");
+          }, 2000);
+        }, 2000);
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        ciclo(); // Executa imediatamente
+        setInterval(ciclo, 20000); // Repete a cada 20s
+      });
+
+      // Camera
+      navigator.mediaDevices
+        .getUserMedia({ video: true })
+        .then((stream) => {
+          const video = document.getElementById("video");
+          video.srcObject = stream;
+        })
+        .catch((err) => console.error("Erro ao acessar webcam:", err));
+    </script>
+  </body>
 </html>
