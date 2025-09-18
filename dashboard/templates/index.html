@@ -62,12 +62,11 @@
             <div
               class="bg-gray-400 h-48 sm:h-64 rounded-xl flex items-center justify-center text-white font-medium"
             >
-              <video
-                id="video"
-                autoplay
-                playsinline
+              <img
+                src="http://10.160.212.183:8080/video"
                 class="w-full h-full object-cover rounded-xl"
-              ></video>
+                alt="Stream da câmera"
+              />
             </div>
           </section>
 
@@ -110,7 +109,7 @@
             </div>
 
             <!-- GIF 2 -->
-            <div class="flex justify-center items-center hidden " id="gif2"> 
+            <div class="flex justify-center items-center hidden" id="gif2">
               <img
                 class="w-24 sm:w-32 md:w-40 lg:w-48 xl:w-52 h-auto"
                 src="{% static 'img/caixa-esteira.gif' %}"
@@ -280,13 +279,6 @@
       });
 
       // Camera
-      navigator.mediaDevices
-        .getUserMedia({ video: true })
-        .then((stream) => {
-          const video = document.getElementById("video");
-          video.srcObject = stream;
-        })
-        .catch((err) => console.error("Erro ao acessar webcam:", err));
     </script>
   </body>
 </html>
