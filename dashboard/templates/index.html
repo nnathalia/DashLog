@@ -176,14 +176,18 @@
     </main>
 
     <script>
+      let ultimoCodigo = null; // Para não repetir o mesmo pacote
+
       async function getPacote() {
         try {
-          const resp = await fetch("/api/get-pacote/");
+          const resp = await fetch("/api/pacote/"); // rota GET para frontend
           const data = await resp.json();
-          console.log("Pacote recebido:", data); // Debug
-          return data.codigo ? data : null;
+
+          if (!data.pacotes || data.pacotes.length === 0) return null;
+
+          return data.pacotes[0]; // pega o pacote mais recente
         } catch (e) {
-          console.error("Erro fetch:", e);
+          console.error("Erro ao buscar pacote:", e);
           return null;
         }
       }
@@ -196,7 +200,6 @@
         "centro-oeste": { cor: "#FF4500", icone: "fas fa-flag-checkered" },
       };
 
-      // Mapeamento para IDs de contagem
       const regioesId = {
         norte: "norte-count",
         nordeste: "nordeste-count",
@@ -244,15 +247,14 @@
         const codigoTexto = document.getElementById("codigo-texto");
         const gif2 = document.getElementById("gif2");
 
-        // Reset visual
         gif1.classList.remove("hidden");
         codigoDiv.classList.add("hidden");
         gif2.classList.add("hidden");
 
         const pacote = await getPacote();
-        if (!pacote) return;
+        if (!pacote || pacote.codigo === ultimoCodigo) return; // evita duplicatas
+        ultimoCodigo = pacote.codigo;
 
-        // Mostra código
         gif1.classList.add("hidden");
         codigoTexto.textContent = pacote.codigo;
         codigoDiv.classList.remove("hidden");
@@ -260,12 +262,10 @@
         atualizarHistorico(pacote.nome, pacote.codigo, pacote.regiao);
         incrementarContagem(pacote.regiao);
 
-        // Depois de 2s mostra gif2
         setTimeout(() => {
           codigoDiv.classList.add("hidden");
           gif2.classList.remove("hidden");
 
-          // Volta para gif1 após mais 2s
           setTimeout(() => {
             gif2.classList.add("hidden");
             gif1.classList.remove("hidden");
@@ -274,11 +274,9 @@
       }
 
       document.addEventListener("DOMContentLoaded", () => {
-        ciclo(); // Executa imediatamente
-        setInterval(ciclo, 20000); // Repete a cada 20s
+        ciclo();
+        setInterval(ciclo, 2000); // polling rápido a cada 2s
       });
-
-      // Camera
     </script>
   </body>
 </html>
