@@ -7,4 +7,5 @@ urlpatterns= [
   path('', views.index, name='index'), 
   path("api/arduino/pacote/", views.receber_pacote_arduino, name="receber_pacote_arduino"), 
   path("api/pacote/", views.listar_pacotes, name="listar_pacotes"),
+  path("camera/", views.camera_view, name="camera_view"),
 ]

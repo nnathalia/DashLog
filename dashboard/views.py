@@ -70,3 +70,9 @@ def listar_pacotes(request):
             return JsonResponse({"erro": "Erro ao buscar dados."}, status=500)
     else:
         return JsonResponse({"erro": "Método não permitido. Use GET."}, status=405)
+    
+def camera_view(request):
+    url_camera = request.GET.get('url_camera', '')
+    if not url_camera:
+        print("URL da câmera não fornecida.")
+    return render(request, 'index.html', {'url_camera': url_camera})
