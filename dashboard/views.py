@@ -3,12 +3,14 @@ import json
 from django.http import JsonResponse
 from django.shortcuts import render
 from .models import Pacote
+from django.views.decorators.csrf import csrf_exempt
 
 # Página inicial
 def index(request):
     return render(request, 'index.html')
 
 # Rota para o Arduino enviar pacotes
+@csrf_exempt
 def receber_pacote_arduino(request):
     if request.method == 'POST':
         try:
