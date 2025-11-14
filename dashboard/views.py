@@ -1,9 +1,12 @@
-from datetime import timezone
 import json
+
 from django.http import JsonResponse
 from django.shortcuts import render
-from .models import Pacote
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
+
+from .models import Pacote
+
 
 # Página inicial
 def index(request):
